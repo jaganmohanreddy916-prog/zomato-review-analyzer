@@ -1,4 +1,5 @@
 import json
+import html
 import re
 import requests
 import streamlit as st
@@ -350,6 +351,7 @@ def show_analysis_result(result):
     sentiment = str(
         result.get("overall_sentiment", "neutral")
     ).strip().lower()
+    sentiment = html.escape(sentiment)
 
     sentiment_styles = {
         "positive": ("#064e3b", "#34d399", "😊"),
@@ -362,9 +364,9 @@ def show_analysis_result(result):
         ("#312e81", "#c4b5fd", "📊")
     )
 
-    rating = result.get("estimated_review_rating", "N/A")
-    summary = result.get("summary", "No summary available.")
-    one_line = result.get("one_line_summary", "")
+    rating = html.escape(str(result.get("estimated_review_rating", "N/A")))
+    summary = html.escape(str(result.get("summary", "No summary available.")))
+    one_line = html.escape(str(result.get("one_line_summary", "")))
 
     st.markdown("""
     <style>
@@ -483,8 +485,9 @@ def show_analysis_result(result):
         )
 
         for item in items:
+            safe_item = html.escape(str(item))
             st.markdown(
-                f'<div class="report-item">• {item}</div>',
+                f'<div class="report-item">• {safe_item}</div>',
                 unsafe_allow_html=True
             )
 
